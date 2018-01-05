@@ -1,2 +1,4 @@
 Next learning - https://medium.com/@MaartenSikkema/using-react-redux-and-webpack-with-dotnet-core-to-build-a-modern-web-frontend-7e2d091b3ba
 SignalR Component - https://medium.com/@jamesdale1993/asp-net-core-2-with-signalr-and-react-redux-a-simple-example-c25ea6b19dbe
+
+SignalR Announcement - https://blogs.msdn.microsoft.com/webdev/2017/09/14/announcing-signalr-for-asp-net-core-2-0/
