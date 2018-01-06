@@ -60,8 +60,8 @@ class FetchData extends React.Component<WeatherForecastProps, {}> {
         let nextStartDateIndex = (this.props.startDateIndex || 0) + 5;
 
         return <p className='clearfix text-center'>
-            <Link className='btn btn-default pull-left' to={ `/fetchdata/${ prevStartDateIndex }` }>Previous</Link>
-            <Link className='btn btn-default pull-right' to={ `/fetchdata/${ nextStartDateIndex }` }>Next</Link>
+            <Link className='btn btn-default pull-left' to={ `/fetchdata/${ prevStartDateIndex }` }>Previous 5 Days</Link>
+            <Link className='btn btn-default pull-right' to={ `/fetchdata/${ nextStartDateIndex }` }>Next 5 Days</Link>
             { this.props.isLoading ? <span>Loading...</span> : [] }
         </p>;
     }
