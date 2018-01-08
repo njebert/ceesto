@@ -6,6 +6,7 @@ import { AppThunkAction } from './';
 // STATE - This defines the type of data maintained in the Redux store.
 
 export interface MoviesState {
+    isLoading: boolean;
     movieID?: number;
     movies: Movie[];
 }
@@ -44,35 +45,49 @@ type KnownAction = RequestMoviesAction | ReceiveMoviesAction;
 export const actionCreators = {
     requestMovies: (movieID: number): AppThunkAction<KnownAction> => (dispatch, getState) => {
         // Only load data if it's something we don't already have (and are not already loading)
-        let fetchTask = fetch(`api/SampleData/Movies?movieID=${movieID}`)
-            .then(response => response.json() as Promise<Movie[]>)
-            .then(data => {
-                dispatch({ type: 'RECEIVE_MOVIES', movieID: movieID, movies: data });
-            });
+        if (movieID !== getState().movies.movieID) {
+            let fetchTask = fetch(`api/SampleData/Movies?movieID=${movieID}`)
+                .then(response => response.json() as Promise<Movie[]>)
+                .then(data => {
+                    dispatch({ type: 'RECEIVE_MOVIES', movieID: movieID, movies: data });
+                });
 
-        addTask(fetchTask); // Ensure server-side prerendering waits for this to complete
-        dispatch({ type: 'REQUEST_MOVIES', movieID: movieID });
+            addTask(fetchTask); // Ensure server-side prerendering waits for this to complete
+            dispatch({ type: 'REQUEST_MOVIES', movieID: movieID });
+        }
     }
 };
 
 // ----------------
 // REDUCER - For a given state and action, returns the new state. To support time travel, this must not mutate the old state.
 
-const unloadedState: MoviesState = { movies: [] };
+const unloadedState: MoviesState = { movies: [], isLoading: false };
 
 export const reducer: Reducer<MoviesState> = (state: MoviesState, incomingAction: Action) => {
     const action = incomingAction as KnownAction;
     switch (action.type) {
         case 'REQUEST_MOVIES':
+            console.log(new Date());
+            console.log("Reducer-REQUEST_MOVIES");
+            console.log("state.movies.length: " + state.movies.length);
             return {
                 movieID: action.movieID,
-                movies: state.movies
+                movies: state.movies,
+                isLoading: true
             };
         case 'RECEIVE_MOVIES':
-            return {
-                movieID: action.movieID,
-                movies: action.movies
-            };
+            console.log(new Date());
+            console.log("Reducer-RECEIVE_MOVIES");
+            console.log("action.movies.length: " + action.movies.length);
+            console.log("action.movies: "+ action.movies[0]);
+            if (action.movieID === state.movieID) {
+                return {
+                    movieID: action.movieID,
+                    movies: action.movies,
+                    isLoading:  false
+                };
+            }
+            break;
         default:
             // The following line guarantees that every action in the KnownAction union has been covered by a case above
             const exhaustiveCheck: never = action;
