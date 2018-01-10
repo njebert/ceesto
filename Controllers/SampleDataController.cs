@@ -35,9 +35,21 @@ namespace ceesto.Controllers
                     Title = "Star Wars: The Last Jedi",
                     Director = "Rian Johnson",
                     ReleaseDate = "December 16th, 2017",
-                    BoxOfficeGross = "$250,000,000"
+                    BoxOfficeGross = "$1,215,000,000"
+                },
+                new Movie(){
+                    MovieID = 2,
+                    Title = "Wedding Crashers",
+                    Director = "David Dobkin",
+                    ReleaseDate = "July 15th, 2005",
+                    BoxOfficeGross = "$285,200,000"
                 }
             };
+
+            if(movieID > 0){
+                movies = movies.Where(m => m.MovieID == movieID).ToList();
+            }
+
 
             return movies;
         }

@@ -12,11 +12,11 @@ export interface MoviesState {
 }
 
 export interface Movie {
-    MovieID: number;
-    Title: string;
-    Director: string;
-    ReleaseDate: string;
-    BoxOfficeGross: string;
+    movieID: number;
+    title: string;
+    director: string;
+    releaseDate: string;
+    boxOfficeGross: string;
 }
 
 // -----------------
@@ -46,12 +46,30 @@ export const actionCreators = {
     requestMovies: (movieID: number): AppThunkAction<KnownAction> => (dispatch, getState) => {
         // Only load data if it's something we don't already have (and are not already loading)
         if (movieID !== getState().movies.movieID) {
+            //
+            // Raw dispatch testing...
+            //
+            // dispatch({
+            //     type: 'RECEIVE_MOVIES', movieID: movieID,
+            //     movies: [{
+            //         MovieID: 1,
+            //         Title: "Star Wars: The Last Jedi",
+            //         Director: "Rian Johnson",
+            //         ReleaseDate: "December 15th, 2017",
+            //         BoxOfficeGross: "$250,000,000"
+            //     }]
+            // });
+
             let fetchTask = fetch(`api/SampleData/Movies?movieID=${movieID}`)
                 .then(response => response.json() as Promise<Movie[]>)
                 .then(data => {
-                    dispatch({ type: 'RECEIVE_MOVIES', movieID: movieID, movies: data });
+                    console.log("data: " + data);
+                    dispatch({
+                        type: 'RECEIVE_MOVIES',
+                        movieID: movieID,
+                        movies: data
+                    });
                 });
-
             addTask(fetchTask); // Ensure server-side prerendering waits for this to complete
             dispatch({ type: 'REQUEST_MOVIES', movieID: movieID });
         }
@@ -61,30 +79,24 @@ export const actionCreators = {
 // ----------------
 // REDUCER - For a given state and action, returns the new state. To support time travel, this must not mutate the old state.
 
-const unloadedState: MoviesState = { movies: [], isLoading: false };
+// Setting movieID in unloadedState to be -1 to allow for movieID 0 to return all results
+const unloadedState: MoviesState = { movies: [], isLoading: false, movieID: -1 };
 
 export const reducer: Reducer<MoviesState> = (state: MoviesState, incomingAction: Action) => {
     const action = incomingAction as KnownAction;
     switch (action.type) {
         case 'REQUEST_MOVIES':
-            console.log(new Date());
-            console.log("Reducer-REQUEST_MOVIES");
-            console.log("state.movies.length: " + state.movies.length);
             return {
                 movieID: action.movieID,
                 movies: state.movies,
                 isLoading: true
             };
         case 'RECEIVE_MOVIES':
-            console.log(new Date());
-            console.log("Reducer-RECEIVE_MOVIES");
-            console.log("action.movies.length: " + action.movies.length);
-            console.log("action.movies: "+ action.movies[0]);
             if (action.movieID === state.movieID) {
                 return {
                     movieID: action.movieID,
                     movies: action.movies,
-                    isLoading:  false
+                    isLoading: false
                 };
             }
             break;

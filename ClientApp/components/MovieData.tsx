@@ -15,12 +15,14 @@ class MovieData extends React.Component<MoviesProps, {}> {
         // This method runs when the component is first added to the page
         let movieID = this.props.match.params.movieID || 0;
         this.props.requestMovies(movieID);
+        console.log("component mounted, movieID: " + movieID);
     }
 
     componentWillReceiveProps(nextProps: MoviesProps) {
         // This method runs when incoming props (e.g., route params) change
         let movieID = nextProps.match.params.movieID || 0;
         this.props.requestMovies(movieID);
+        console.log("component will receive props, movieID: " + movieID);
     }
 
     public render() {
@@ -43,11 +45,11 @@ class MovieData extends React.Component<MoviesProps, {}> {
             </thead>
             <tbody>
                 {this.props.movies.map(movie =>
-                    <tr key={movie.MovieID}  >
-                        <td>{movie.Title}</td>
-                        <td>{movie.Director}</td>
-                        <td>{movie.ReleaseDate}</td>
-                        <td>{movie.BoxOfficeGross}</td>
+                    <tr key={movie.movieID}  >
+                        <td>{movie.title}</td>
+                        <td>{movie.director}</td>
+                        <td>{movie.releaseDate}</td>
+                        <td>{movie.boxOfficeGross}</td>
                     </tr>
                 )}
             </tbody>
