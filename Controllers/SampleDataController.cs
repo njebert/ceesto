@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using ceesto.Data;
 
 namespace ceesto.Controllers
 {
@@ -67,15 +68,6 @@ namespace ceesto.Controllers
                     return 32 + (int)(TemperatureC / 0.5556);
                 }
             }
-        }
-
-        public class Movie
-        {
-            public int MovieID { get; set; }
-            public string Title { get; set; }
-            public string Director { get; set; }
-            public string ReleaseDate { get; set; }
-            public string BoxOfficeGross { get; set; }
         }
     }
 }
