@@ -30,24 +30,14 @@ namespace ceesto.Controllers
         [HttpGet("[action]")]
         public IEnumerable<Movie> Movies(int movieID)
         {
-            List<Movie> movies = new List<Movie>(){
-                new Movie(){
-                    MovieID = 1,
-                    Title = "Star Wars: The Last Jedi",
-                    Director = "Rian Johnson",
-                    ReleaseDate = "December 16th, 2017",
-                    BoxOfficeGross = "$1,215,000,000"
-                },
-                new Movie(){
-                    MovieID = 2,
-                    Title = "Wedding Crashers",
-                    Director = "David Dobkin",
-                    ReleaseDate = "July 15th, 2005",
-                    BoxOfficeGross = "$285,200,000"
-                }
+            List<Movie> movies = new List<Movie>();
+            using (var ctx = new MoviesContext())
+            {
+                movies = ctx.Movies.ToList();
             };
 
-            if(movieID > 0){
+            if (movieID > 0)
+            {
                 movies = movies.Where(m => m.MovieID == movieID).ToList();
             }
 
